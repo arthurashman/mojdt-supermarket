@@ -7,6 +7,7 @@ class Checkout
 
   def initialize
     @basket = []
+    @subtotal = 0
   end
 
   def scan(item_code)
@@ -19,5 +20,12 @@ class Checkout
         @basket << item
       end
     end
+  end
+
+  def calculate_total
+    @basket.each do |item|
+      @subtotal += item[:price]
+    end
+    @subtotal
   end
 end

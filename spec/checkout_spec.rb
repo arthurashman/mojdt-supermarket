@@ -29,5 +29,16 @@ RSpec.describe Checkout do
     it 'prints message to console when item not in catalogue' do
       expect { checkout.scan('Foo') }.to output(/Product not found/).to_stdout
     end
+
+    describe '#calculate_total' do
+      it 'start with 0 total' do
+        expect(checkout.calculate_total).to eq(0)
+      end
+
+      it 'calculates the correct total when no discounts apply' do
+        checkout.scan(['FR1', 'SR1'])
+        expect(checkout.calculate_total).to eq(811)
+      end
+    end
   end
 end
