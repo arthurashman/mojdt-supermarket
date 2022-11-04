@@ -7,7 +7,7 @@ RSpec.describe ProductInformationManager::ProductCatalogue do
 
   describe '#fetch_item' do
     it 'can return an item that is in the catalogue' do
-      expect(product_catalogue.fetch_item('FR1')).to eq({ name: 'Fruit tea', price: 311 })
+      expect(product_catalogue.fetch_item('FR1')).to eq({ code: 'FR1', name: 'Fruit tea', price: 311 })
     end
 
     it 'returns nil when item is not in catalogue' do

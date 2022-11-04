@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require './app/product_information_manager/product_catalogue'
+require './app/sales_rules'
 
 class Checkout
   attr_reader :basket
@@ -23,9 +24,20 @@ class Checkout
   end
 
   def calculate_total
+    calculate_subtotal
+    apply_discounts
+    @total = @subtotal - @discounts
+  end
+
+  private
+
+  def calculate_subtotal
     @basket.each do |item|
       @subtotal += item[:price]
     end
-    @subtotal
+  end
+
+  def apply_discounts
+    @discounts = SalesRules.calculate_discounts(@basket)
   end
 end
