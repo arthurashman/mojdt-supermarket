@@ -2,6 +2,7 @@
 
 require './app/product_information_manager/product_catalogue'
 require './app/sales_rules'
+require 'pry'
 
 class Checkout
   attr_reader :basket
@@ -9,11 +10,12 @@ class Checkout
   def initialize
     @basket = []
     @subtotal = 0
+    @total = 0
   end
 
-  def scan(item_code)
-    item_code.is_a?(Array) ? item_code : item_code = [item_code]
-    item_code.each do |item_code|
+  def scan(item_codes)
+    item_codes.is_a?(String) ? item_codes = [item_codes] : item_codes
+    item_codes.each do |item_code|
       item = ProductInformationManager::ProductCatalogue.fetch_item(item_code)
       if item.nil?
         p 'Product not found'

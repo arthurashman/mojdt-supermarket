@@ -23,46 +23,56 @@ RSpec.describe Checkout do
     end
 
     it 'can bulk scan a basket' do
-      checkout.scan(%w[FR1 SR1 SR1])
+      checkout.scan(%w[FR1 CF1 CF1])
       expect(checkout.basket).to eq([{ code: 'FR1', name: 'Fruit tea', price: 311 },
-                                     { code: 'SR1', name: 'Strawberries', price: 500 }, { code: 'SR1', name: 'Strawberries', price: 500 }])
+                                     { code: 'CF1', name: 'Coffee', price: 1123 },
+                                     { code: 'CF1', name: 'Coffee', price: 1123 }])
     end
 
     it 'prints message to console when item not in catalogue' do
       expect { checkout.scan('Foo') }.to output(/Product not found/).to_stdout
     end
+  end
 
-    describe '#calculate_total' do
-      it 'start with 0 total' do
-        expect(checkout.calculate_total).to eq(0)
+  describe '#calculate_total' do
+    it 'start with 0 total' do
+      expect(checkout.calculate_total).to eq(0)
+    end
+
+    it 'calculates the correct total when no discounts apply' do
+      checkout.scan('FR1')
+      checkout.scan('SR1')
+      expect(checkout.calculate_total).to eq(811)
+    end
+
+    context 'when bogof discount applies' do
+      it 'calculates the correct total for single free item' do
+        checkout.scan(%w[FR1 FR1])
+        expect(checkout.calculate_total).to eq(311)
       end
 
-      it 'calculates the correct total when no discounts apply' do
-        checkout.scan(%w[FR1 SR1])
-        expect(checkout.calculate_total).to eq(811)
+      it 'calculates the correct total for multiple free item' do
+        checkout.scan(%w[FR1 FR1 FR1 FR1])
+        expect(checkout.calculate_total).to eq(622)
       end
 
-      context 'when bogof discount applies' do
-        it 'calculates the correct total for single free item' do
-          checkout.scan('FR1')
-          checkout.scan('FR1')
-          expect(checkout.calculate_total).to eq(311)
-        end
+      it 'calculates the correct total for incomplete offer' do
+        checkout.scan(%w[FR1 FR1 FR1])
+        expect(checkout.calculate_total).to eq(622)
+      end
+    end
 
-        it 'calculates the correct total for multiple free item' do
-          checkout.scan('FR1')
-          checkout.scan('FR1')
-          checkout.scan('FR1')
-          checkout.scan('FR1')
-          expect(checkout.calculate_total).to eq(622)
-        end
+    context 'when bulk offer applies' do
+      it 'calculates the correct total when offer condition met' do
+        checkout.scan(%w[SR1 SR1 SR1])
+        expect(checkout.calculate_total).to eq(1350)
+      end
+    end
 
-        it 'calculates the correct total for incomplete offer' do
-          checkout.scan('FR1')
-          checkout.scan('FR1')
-          checkout.scan('FR1')
-          expect(checkout.calculate_total).to eq(622)
-        end
+    context 'when basket is mixed and has multiple offer conditions met' do
+      it 'calculates the correct total when offer condition met' do
+        checkout.scan(%w[SR1 FR1 CF1 SR1 CF1 FR1 FR1 SR1])
+        expect(checkout.calculate_total).to eq(4218)
       end
     end
   end
