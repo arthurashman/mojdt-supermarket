@@ -1,0 +1,12 @@
+[{
+	"name": "bogof",
+	"item_code": "FR1",
+	"basket_count": 2,
+	"free": 1
+}, 
+{
+	"name": "bulk",
+	"item_code": "SR1",
+	"basket_count": 3,
+	"price_reduction": 50
+}]

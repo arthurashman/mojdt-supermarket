@@ -1,0 +1,17 @@
+{
+	"AB": {
+		"code": "AB",
+		"name": "Fruit tea",
+		"price": 311
+	},
+	"BC": {
+		"code": "BC",
+		"name": "Strawberries",
+		"price": 500
+	},
+	"DE": {
+		"code": "DE",
+		"name": "Coffee",
+		"price": 1123
+	}
+}
